@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>re-ease-search.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root {
+            --bg: #f7f7f7;
+            --container-bg: #fff;
+            --text: #222;
+            --primary: #1565c0;
+            --secondary: #e3eafc;
+            --accent: #1976d2;
+            --elab-heading: #e65100;
+            --elab-bg: #fffde7;
+            --border: #e0e0e0;
+            
+        }
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg);
+            color: var(--text);
+        }
+        .navbar {
+            width: 100%;
+            background: var(--primary);
+            color: #fff;
+            height: 64px;
+            min-height: 64px;
+            max-height: 64px;
+            padding: 0.2em 0;
+            box-shadow: 0 2px 8px #0001;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            transition: top 0.3s;
+            z-index: 10;
+        }
+        .navbar-title {
+            font-size: 1.22em;
+            line-height: 64px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-left: 1em;
+        }
+        .toggle-mode-btn {
+            margin-right: 1em;
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border: 1.5px solid var(--primary);
+            border-radius: 50%;
+            font-size: 1.1em;
+            cursor: pointer;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s, background 0.2s, border 0.2s;
+            box-shadow: 0 1px 4px #0001;
+            padding: 0;
+            position: relative;
+            top: -6px;
+        }
+        .toggle-mode-btn svg {
+            width: 18px;
+            height: 18px;
+            display: block;
+        }
+        .dark-mode .toggle-mode-btn {
+            background: var(--container-bg);
+            color: #90caf9;
+            border-color: #90caf9;
+        }
+        .container {
+            max-width: 820px;
+            margin: 40px auto 0 auto;
+            background: var(--container-bg);
+            padding: 2.5em 2.5em 2em 2.5em;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px #0002;
+        }
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            font-size: 2.1em;
+            margin-bottom: 0.2em;
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            text-align: center;
+            color: var(--accent);
+            font-size: 1.1em;
+            margin-bottom: 2em;
+            letter-spacing: 0.5px;
+        }
+        label {
+            display: block;
+            margin-top: 1.2em;
+            font-weight: 500;
+            color: var(--primary);
+            letter-spacing: 0.2px;
+        }
+        input, select {
+            width: 100%;
+            padding: 0.6em;
+            margin-top: 0.3em;
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            font-size: 1em;
+            background: #f8fafc;
+            color: var(--text);
+            transition: border 0.2s;
+        }
+        input:focus, select:focus {
+            border: 1.5px solid var(--primary);
+            outline: none;
+        }
+        button {
+            margin-top: 1.7em;
+            padding: 0.8em 2.2em;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.08em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            letter-spacing: 0.5px;
+        }
+        button:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+        .result, .elaboration {
+            margin-top: 2em;
+            background: #f0f4fa;
+            padding: 1.2em 1.5em;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+        }
+        .elaboration {
+            background: #fffde7 !important;
+            border: 2px solid var(--elab-heading);
+            box-shadow: 0 2px 8px #0002;
+            margin-top: 2em;
+            padding: 1.2em 1.5em;
+            border-radius: 10px;
+            position: relative;
+        }
+        .elaboration-title {
+            font-size: 1.18em;
+            font-weight: bold;
+            color: var(--elab-heading);
+            margin-bottom: 0.7em;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+        .elaboration-content {
+            white-space: pre-wrap;
+            font-size: 1.12em;
+            color: #222;
+            background: #fff9c4 !important;
+            border-radius: 8px;
+            padding: 1em 1.2em;
+        }
+        .dark-mode .elaboration {
+            background: #fffde7 !important;
+            color: #222 !important;
+        }
+        .dark-mode .elaboration-content {
+            background: #fff9c4 !important;
+            color: #222 !important;
+        }
+        .section-title {
+            color: var(--primary);
+            background: none;
+            padding: 0;
+            border-radius: 0;
+            margin-bottom: 1em;
+            font-size: 1.18em;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+        
+        .error {
+            color: #c00;
+            margin-top: 1em;
+            font-weight: 500;
+        }
+        .step { display: none; }
+        .step.active { display: block; }
+        .dark-mode {
+            --bg: #181a1b;
+            --container-bg: #23272e;
+            --text: #f7f7f7;
+            --primary: #2196f3;
+            --secondary: #23272e;
+            --accent: #90caf9;
+            --paper-btn-bg: #23272e;
+            --paper-title: #90caf9;
+            --analysis-title: #80cbc4;
+            --idea-btn-bg: #263238;
+            --idea-title: #90caf9;
+            --idea-details: #bbdefb;
+            --elab-heading: #ffd54f;
+            --elab-bg: #263238;
+            --border: #333a;
+        }
+        .dark-mode .result, .dark-mode .elaboration { background: #23272e; color: #f7f7f7; }
+        .dark-mode label, .dark-mode h1, .dark-mode .subtitle, .dark-mode .section-title { color: #90caf9; }
+        .dark-mode input, .dark-mode select { background: #23272e; color: #f7f7f7; border: 1px solid #444; }
+        .dark-mode button { background: #2196f3; }
+        .dark-mode .error { color: #ff8a65; }
+        .dark-mode a, .dark-mode a:visited {
+            color: #111 !important;
+        }
+        .dark-mode b{color:#000}
+        @media (max-width: 600px) {
+            .container { padding: 1em; }
+            .navbar-title { margin-left: 1em; }
+            .toggle-mode-btn { margin-right: 1em; }
+            .features-row {
+                flex-direction: column;
+                gap: 1.5em;
+                margin: 2em 0 1em 0;
+            }
+            .feature-card {
+                min-width: unset;
+                max-width: unset;
+                width: 100%;
+                margin-bottom: 1em;
+            }
+            .choose-options {
+                flex-direction: column;
+                gap: 1em;
+                width: 100%;
+            }
+            .choose-card {
+                min-width: unset;
+                max-width: unset;
+                width: 100%;
+                padding: 1.2em 1em;
+            }
+            .search-bar {
+                max-width: 100%;
+                padding: 0.4em 0.7em;
+            }
+            .search-bar input {
+                font-size: 1em;
+            }
+            .slider-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .paper-title-btn, .idea-title-btn {
+                font-size: 1em;
+                padding: 0.6em 0.7em;
+            }
+            .elaboration-content {
+                font-size: 1em;
+                padding: 0.7em 0.7em;
+            }
+            .elaboration {
+                padding: 1em 0.7em;
+            }
+            .welcome-title {
+                font-size: 1.4em;
+            }
+            .welcome-desc {
+                font-size: 1em;
+            }
+            .choose-title {
+                font-size: 1.1em;
+            }
+            .section-title {
+                font-size: 1em;
+            }
+            .ai-idea-card {
+                padding: 1em 0.7em;
+                font-size: 1em;
+            }
+            .logo {
+                font-size: 1em;
+            }
+            .logo-icon {
+                width: 26px;
+                height: 26px;
+                font-size: 1em;
+            }
+        }
+        @media (max-width: 400px) {
+            .navbar-title, .logo {
+                font-size: 0.95em;
+            }
+            .welcome-title {
+                font-size: 1.1em;
+            }
+            .container {
+                padding: 0.5em;
+            }
+        }
+        @media (max-width: 700px) {
+            .navbar {
+                height: auto;
+                min-height: 64px;
+                max-height: none;
+                flex-wrap: wrap;
+                padding: 0.1em 0;
+            }
+            .navbar-title {
+                margin-left: 0.5em;
+                line-height: 64px;
+            }
+            .toggle-mode-btn {
+                margin-right: 0.5em;
+            }
+        }
+        /* Responsive: make sliders and inputs full width on mobile */
+        @media (max-width: 600px) {
+            input[type="range"], input[type="number"], select, button {
+                width: 100% !important;
+                font-size: 1em;
+            }
+            .slider-row {
+                width: 100%;
+            }
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 38px;
+            height: 38px;
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            border-top: 4px solid transparent;
+            animation: spin 1s linear infinite;
+            vertical-align: middle;
+            margin-right: 0.7em;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg);}
+            100% { transform: rotate(360deg);}
+        }
+        .loading-text {
+            display: inline-block;
+            font-size: 1.1em;
+            color: var(--primary);
+            vertical-align: middle;
+            letter-spacing: 0.5px;
+        }
+        /* Paper/Idea dropdowns */
+        .paper-title-btn, .idea-title-btn {
+            background: var(--secondary);
+            color: var(--primary);
+            border: none;
+            border-radius: 5px;
+            font-size: 1.08em;
+            font-weight: bold;
+            width: 100%;
+            text-align: left;
+            padding: 0.7em 1em;
+            margin-bottom: 0.2em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .paper-title-btn:hover, .idea-title-btn:hover {
+            background: #dbeafe;
+        }
+        .dark-mode .paper-title-btn, .dark-mode .idea-title-btn {
+            background: #263238;
+            color: #90caf9;
+        }
+        .dark-mode .paper-title-btn:hover, .dark-mode .idea-title-btn:hover {
+            background: #1a222a;
+        }
+        .paper-details, .idea-details {
+            background: #f9f9f9;
+            border-radius: 5px;
+            padding: 0.7em;
+            margin-top: 0.5em;
+        }
+        .dark-mode .paper-details, .dark-mode .idea-details {
+            background: #23272e;
+        }
+        .welcome-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .welcome-title {
+            font-size: 2.2em;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 0.3em;
+            letter-spacing: 1px;
+        }
+        .welcome-desc {
+            font-size: 1.15em;
+            color: var(--accent);
+            margin-bottom: 2em;
+            max-width: 500px;
+        }
+        .welcome-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            padding: 0.8em 2.2em;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 1em;
+            transition: background 0.2s;
+        }
+        .choose-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 3em;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .choose-title {
+            font-size: 1.3em;
+            color: var(--primary);
+            font-weight: bold;
+            margin-bottom: 1.5em;
+        }
+        .choose-options {
+            display: flex;
+            gap: 2em;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .choose-card {
+            background: var(--secondary);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #0001;
+            padding: 2em 2.2em;
+            min-width: 240px;
+            max-width: 320px;
+            text-align: center;
+            margin-bottom: 1em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            transform: translateY(0) scale(1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .choose-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .choose-card-title {
+            font-size: 1.13em;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 0.7em;
+        }
+        .choose-card-desc {
+            color: var(--text);
+            font-size: 1em;
+            margin-bottom: 1.2em;
+        }
+        .choose-card-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            padding: 0.7em 1.7em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .ai-ideas-section {
+            margin-top: 2em;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .ai-idea-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px #0001;
+            margin: 1.2em auto;
+            padding: 1.2em 1.5em;
+            max-width: 600px;
+            color: var(--primary);
+            font-size: 1.08em;
+            text-align: left;
+        }
+        .dark-mode .choose-card, .dark-mode .ai-idea-card {
+            background: #23272e;
+            color: #90caf9;
+        }
+        /* Vercel static hosting: ensure root-relative paths for assets and API */
+        /* Remove or comment out any references to localhost or 127.0.0.1 in API URLs in JS below */
+        /*Hovering effect*/
+        button:hover, .choose-card-btn:hover, .welcome-btn:hover {
+        background: #1976d2;
+        color: #fff;
+        box-shadow: 0 0 8px #2196f380;
+        }
+        /* Enhanced loading spinner */
+        .loading-spinner {
+            border: 4px solid rgba(33, 150, 243, 0.2);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 38px;
+            height: 38px;
+            animation: spin 1s linear infinite;
+            position: relative;
+        }
+
+        .loading-spinner:after {
+            content: "";
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 4px solid transparent;
+            border-radius: 50%;
+            border-top: 4px solid var(--accent);
+            animation: spin 1.5s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Section transitions */
+        .section-transition {
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .main-analyzer-section {
+            animation: fadeIn 0.5s ease-out;
+        }
+        /* Animated input fields */
+        input, select {
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        input:focus, select:focus {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(33, 150, 243, 0.2);
+        }
+
+        /* Floating labels */
+        .input-group {
+            position: relative;
+            margin-top: 1.5em;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 0.6em;
+            left: 0.6em;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            color: #999;
+        }
+
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -1.2em;
+            left: 0;
+            font-size: 0.8em;
+            color: var(--primary);
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #f4f8ff;
+            border-radius: 25px;
+            padding: 0.5em 1em;
+            margin-bottom: 1.5em;
+            border: 2px solid #e3eafc;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            }
+        .search-bar .search-icon {
+            font-size: 1.2em;
+            color: #1565c0;
+            margin-right: 0.7em;
+            }
+        .search-bar input {
+            border: none;
+            background: transparent;
+            font-size: 1.1em;
+            outline: none;
+            flex: 1;
+            color: #222;
+            }
+            #analyze-papers-btn {
+                display: block;
+                margin: 2em auto 0 auto;
+                padding: 1em 2.5em;
+                background: #3b82f6;
+                color: #fff;
+                border-radius: 30px;
+                font-size: 1.15em;
+                font-weight: 600;
+                border: none;
+                cursor: pointer;
+                box-shadow: 0 2px 8px #0001;
+                transition: background 0.2s;
+                }
+            #analyze-papers-btn:hover {
+                background: #1565c0;
+                }
+            .features-row {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                gap: 5vw;
+                margin: 3em 0 2em 0;
+                }
+
+            .feature-card {
+                text-align: center;
+                min-width: 180px;
+                max-width: 220px;
+                }
+
+            .feature-icon {
+                font-size: 2.5em;
+                margin-bottom: 0.5em;
+                }
+
+            .feature-title {
+                font-weight: 700;
+                color: #3b82f6;
+                font-size: 1.35em;
+                margin-bottom: 0.4em;
+                font-family: inherit;
+                }
+            .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.3em;
+            letter-spacing: 0.5px;
+                }
+            .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #4a6bff 0%, #1565c0 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(74, 107, 255, 0.3);
+                }
+ </style>
+</head>
+<body>
+    <nav class="navbar">
+
+        <div class="logo">
+                <div class="logo-icon" style="gap:10em">re.</div>
+                <span id="nav-home-title" style="cursor:pointer;">re-ease-search.com</span>
+            </div>
+        <div style="display:flex;gap:1em;align-items:center;">
+            <button type="button" class="choose-card-btn" id="nav-hot-fresh-btn" style="margin-right:0.5em;">Hot &amp; Fresh</button>
+            <button type="button" class="choose-card-btn" id="nav-advanced-btn" style="margin-right:1em;">Advanced re-ease-search</button>
+            <button class="toggle-mode-btn" id="toggle-mode-btn" title="Toggle dark/light mode">
+                <span id="toggle-mode-icon">
+                    <!-- Default: moon icon SVG -->
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z"/>
+                    </svg>
+                </span>
+            </button>
+        </div>
+    </nav>
+    <div class="container">
+        <!-- Welcome Section -->
+        <div id="welcome-section" class="welcome-section">
+            <div class="welcome-title">Welcome to re-ease-search.com</div>
+            <div class="welcome-desc">
+                Your AI-powered research companion.<br>
+                Discover new research ideas or analyze your own topics with ease.
+            </div>
+            <button class="welcome-btn" id="get-started-btn">Get Started</button>
+        
+        <div class="features-row">
+  <div class="feature-card">
+    <div class="feature-icon" aria-label="Discover">🔍</div>
+    <div class="feature-title">Discover</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon" aria-label="Innovate">💡</div>
+    <div class="feature-title">Innovate</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon" aria-label="Accelerate">🚀</div>
+    <div class="feature-title">Accelerate</div>
+  </div>
+</div>
+</div>
+
+        <!-- Choose Section -->
+        <div id="choose-section" class="choose-section" style="display:none;">
+            <div class="choose-title">What would you like to do?</div>
+            <div class="choose-options">
+                <div class="choose-card">
+                    <div class="choose-card-title">Hot &amp; Fresh</div>
+                    <div class="choose-card-desc">
+                        Get a list of fresh, random research ideas generated by AI. Great for inspiration!
+                    </div>
+                    <button class="choose-card-btn" id="explore-ai-btn">Hot &amp; Fresh</button>
+                </div>
+                <div class="choose-card">
+                    <div class="choose-card-title">Work on Your Own Topic</div>
+                    <div class="choose-card-desc">
+                        Analyze research papers, find gaps, and elaborate on your own research topic.
+                    </div>
+                    <button class="choose-card-btn" id="work-own-btn">Start My Research</button>
+                </div>
+            </div>
+        </div>
+        <!-- AI Ideas Section -->
+        <div id="ai-ideas-section" class="ai-ideas-section" style="display:none;">
+            <span class="section-title">AI-Generated Research Ideas</span>
+            <div id="ai-ideas-list"></div>
+            <button class="choose-card-btn" id="back-to-choose-btn" style="margin-top:1.5em;">Back</button>
+        </div>
+        <!-- Existing Research Analyzer Section -->
+        <div id="main-analyzer-section" style="display:none;">
+            <button class="choose-card-btn" id="back-to-main-choose-btn" style="margin-bottom:1.5em;">Back</button>
+            <h1>Advanced re-ease-search</h1>
+            <div class="subtitle">Analyze research papers, identify gaps, and generate new research ideas with AI-powered insights.</div>
+            <!-- Step 1: Topic and number of papers -->
+            <div id="step1">
+                <div class="search-bar">
+                <span class="search-icon">&#128269;</span>
+                <input type="text" id="topic" placeholder="e.g. Deep Learning for Medical Imaging" />
+                </div>
+
+                <label for="num_papers">Number of Papers to Analyze (max 10)</label>
+                <div class="slider-row">
+                <input type="range" id="num_papers" min="1" max="10" value="3" oninput="numPapersValue.innerText = this.value">
+                <span id="numPapersValue">3</span>
+                </div>
+
+                <button id="analyze-papers-btn">Analyze Papers</button>
+            </div>
+            <!-- Step 2: Show detailed analysis of each paper -->
+            <div id="papers-section" style="display:none;">
+                <span class="section-title">Paper Analysis</span>
+                <div id="papers-list"></div>
+                <button id="to-ideas-btn">Generate Ideas/Gaps</button>
+            </div>
+            <!-- Step 3: Input for ideas/gaps and word limit -->
+            <div id="ideas-input-section" style="display:none;">
+                <label for="num_ideas">Number of Gaps/Ideas to Identify (max 10)</label>
+                <div class="slider-row">
+                    <input type="range" id="num_ideas" min="1" max="10" value="3" oninput="numIdeasValue.innerText = this.value">
+                    <span id="numIdeasValue">3</span>
+                </div>
+                <label for="word_limit">Word Limit per Idea/Gap (100-250)</label>
+                <input type="number" id="word_limit" min="100" max="250" value="150">
+                <button id="generate-ideas-btn">Generate Ideas</button>
+            </div>
+            <!-- Step 4: Show ideas/gaps -->
+            <div id="ideas-section" style="display:none;">
+                <span class="section-title">Identified Ideas and Gaps</span>
+                <div id="ideas-list"></div>
+                <label for="idea_select">Select an idea/gap to elaborate:</label>
+                <select id="idea_select"></select>
+                <label for="elab_word_limit">Word limit for elaboration (default 500, min 300, max 2000)</label>
+                <input type="number" id="elab_word_limit" min="300" max="2000" value="500">
+                <button id="elaborate-btn">Elaborate</button>
+            </div>
+            <!-- Step 5: Show elaboration -->
+            <div id="elaboration-section" class="elaboration" style="display:none;"></div>
+            <div id="loading" style="display:none; text-align:center; margin-top:1em;">
+                <span class="loading-spinner"></span>
+                <span class="loading-text">Processing...</span>
+            </div>
+            <div id="error" class="error"></div>
+        </div>
+        <div id="elaboration-result"></div>
+    </div>
+    <script>
+        // Step navigation
+        const analyzePapersBtn = document.getElementById('analyze-papers-btn');
+        const papersSection = document.getElementById('papers-section');
+        const papersList = document.getElementById('papers-list');
+        const toIdeasBtn = document.getElementById('to-ideas-btn');
+        const ideasInputSection = document.getElementById('ideas-input-section');
+        const generateIdeasBtn = document.getElementById('generate-ideas-btn');
+        const ideasSection = document.getElementById('ideas-section');
+        const ideasList = document.getElementById('ideas-list');
+        const ideaSelect = document.getElementById('idea_select');
+        const elaborateBtn = document.getElementById('elaborate-btn');
+        const elaborationSection = document.getElementById('elaboration-section');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+
+        let paperAnalyses = [];
+        let ideasArr = [];
+
+        // In every fetch, add a catch for network errors and show a more helpful message
+        async function safeFetch(url, options) {
+            try {
+                const response = await fetch(url, options);
+                return response;
+            } catch (err) {
+                throw new Error("Could not connect to the backend API. Please ensure your backend server is running and accessible at " + url + ". If running locally, start your Flask server with: python api.py");
+            }
+        }
+
+        // Replace all API URLs to use only relative paths for Vercel static hosting
+        // (Vercel cannot host Python/Flask backend, so you must point to an external backend API)
+        // Set your backend API base URL here:
+        const API_BASE = "https://research-ai-brzq.onrender.com";
+
+        // Helper to prefix API endpoints with the backend base URL
+        function apiUrl(path) {
+            if (path.startsWith("http")) return path;
+            if (path.startsWith("/")) return API_BASE + path;
+            return API_BASE + "/" + path;
+        }
+
+        analyzePapersBtn.onclick = async function() {
+            const topic = document.getElementById('topic').value.trim();
+            const num_papers = Number(document.getElementById('num_papers').value);
+            if (!topic || num_papers < 1 || num_papers > 10) {
+                alert("Please enter a valid topic and number of papers (1-10).");
+                return;
+            }
+            loadingDiv.style.display = 'block';
+            errorDiv.textContent = '';
+            papersSection.style.display = 'none';
+            ideasInputSection.style.display = 'none';
+            ideasSection.style.display = 'none';
+            elaborationSection.style.display = 'none';
+
+            // Call backend for detailed analysis of each paper
+            let apiUrls = [
+                apiUrl("/api/analyze_papers"),
+                apiUrl("/analyze_papers")
+            ];
+            let response, json, success = false, lastError = "";
+            for (let url of apiUrls) {
+                try {
+                    response = await safeFetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        mode: 'cors',
+                        body: JSON.stringify({ topic, num_papers })
+                    });
+                    if (response.ok) {
+                        json = await response.json();
+                        success = true;
+                        break;
+                    } else {
+                        lastError = `Status: ${response.status} ${response.statusText}`;
+                    }
+                } catch (err) {
+                    lastError = err.message || err.toString();
+                }
+            }
+            loadingDiv.style.display = 'none';
+            if (success && json && Array.isArray(json.papers)) {
+                paperAnalyses = json.papers;
+                papersList.innerHTML = "";
+                paperAnalyses.forEach((paper, idx) => {
+                    const paperId = `paper-details-${idx}`;
+                    // Clean up extra signs (e.g., unwanted asterisks, hashes, markdown, etc.)
+                    let cleanTitle = (paper.title || "Untitled")
+                        .replace(/[*#`_~]/g, '') // remove markdown symbols
+                        .replace(/\s+/g, ' ')
+                        .trim();
+                    let cleanAnalysis = (paper.analysis || "")
+                        .replace(/[*#`_~]/g, '') // remove markdown symbols
+                        .replace(/\s+\n/g, '\n')
+                        .replace(/\n{3,}/g, '\n\n')
+                        .replace(/^\s+|\s+$/g, '');
+                    let cleanLink = paper.link ? paper.link.replace(/[<>]/g, '') : "";
+
+                    // Extract and display keywords with links
+                    let keywords = [];
+                    // Try to extract keywords from paper.keywords, or fallback to extracting from analysis text
+                    if (Array.isArray(paper.keywords) && paper.keywords.length > 0) {
+                        keywords = paper.keywords;
+                    } else {
+                        // Simple keyword extraction: pick capitalized words/phrases from analysis as fallback
+                        let matches = cleanAnalysis.match(/\b([A-Z][a-zA-Z0-9\-]+(?: [A-Z][a-zA-Z0-9\-]+){0,2})\b/g);
+                        if (matches) {
+                            // Remove duplicates and filter out common words
+                            let seen = new Set();
+                            let common = new Set(["Introduction","Conclusion","Results","Methods","Discussion","References","Table","Figure","Analysis","Research","Study","Paper","Author","Authors","Section"]);
+                            keywords = matches.filter(w => !seen.has(w) && !common.has(w) && seen.add(w)).slice(0, 8);
+                        }
+                    }
+                    let keywordsHtml = "";
+                    if (keywords.length > 0) {
+                        keywordsHtml = `<div style="margin:0.7em 0 0.2em 0;">
+                            <span style="font-weight:600;color:var(--primary);">Keywords:</span>
+                            <span style="display:inline-block;margin-top:0.3em;">
+                                ${keywords.map(kw => {
+                                    let url = "https://en.wikipedia.org/wiki/" + encodeURIComponent(kw.trim().replace(/\s+/g, "_"));
+                                    return `<a href="${url}" target="_blank" style="background:#e3eafc;color:var(--primary);border-radius:4px;padding:0.18em 0.7em;margin:0 0.2em 0.2em 0;display:inline-block;text-decoration:none;font-size:0.98em;">${kw}</a>`;
+                                }).join(' ')}
+                            </span>
+                        </div>`;
+                    }
+
+                    papersList.innerHTML += `
+                        <div style="margin-bottom:1em;">
+                            <button type="button" class="paper-title-btn" data-target="${paperId}" style="width:100%;text-align:left;font-weight:bold;padding:0.7em 1em;border:none;background:#e9e9e9;border-radius:5px;cursor:pointer;">
+                                <span style="font-size:1.1em;font-weight:bold;color:#1a237e;">${cleanTitle}</span>
+                            </button>
+                            <div id="${paperId}" class="paper-details" style="display:none;margin-top:0.5em;background:#f9f9f9;padding:0.7em;border-radius:5px;">
+                                <span><b>Link:</b> ${cleanLink ? `<a href="${cleanLink}" target="_blank" style="color:#0070f3;text-decoration:underline;">${cleanLink}</a>` : "Not available"}</span><br>
+                                ${keywordsHtml}
+                                <div style="margin-top:0.5em;">
+                                    <span style="font-weight:bold;color:#00695c;">Analysis:</span><br>
+                                    <span style="color:#333;">${cleanAnalysis.replace(/\n/g, "<br>")}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                papersSection.style.display = 'block';
+
+                // Add event listeners for dropdown toggle
+                document.querySelectorAll('.paper-title-btn').forEach(btn => {
+                    btn.onclick = function() {
+                        const targetId = btn.getAttribute('data-target');
+                        const detailsDiv = document.getElementById(targetId);
+                        if (detailsDiv.style.display === "none" || detailsDiv.style.display === "") {
+                            detailsDiv.style.display = "block";
+                        } else {
+                            detailsDiv.style.display = "none";
+                        }
+                    };
+                });
+            } else {
+                errorDiv.textContent = (json && json.detail) || `An error occurred. Please try again. (Last error: ${lastError})`;
+            }
+        };
+
+        toIdeasBtn.onclick = function() {
+            ideasInputSection.style.display = 'block';
+            ideasSection.style.display = 'none';
+            elaborationSection.style.display = 'none';
+        };
+
+        generateIdeasBtn.onclick = async function() {
+            const num_ideas = Number(document.getElementById('num_ideas').value);
+            const word_limit = Number(document.getElementById('word_limit').value);
+            if (num_ideas < 1 || num_ideas > 10 || word_limit < 100 || word_limit > 250) {
+                alert("Please enter valid numbers for ideas (1-10) and word limit (100-250).");
+                return;
+            }
+            loadingDiv.style.display = 'block';
+            errorDiv.textContent = '';
+            ideasSection.style.display = 'none';
+            elaborationSection.style.display = 'none';
+
+            // Collect limitations/scope from paperAnalyses
+            const limitations = paperAnalyses.map(p => p.lim_scope || "").join("\n\n");
+            const topic = document.getElementById('topic').value.trim();
+
+            // Call backend for ideas/gaps
+            let apiUrls = [
+                apiUrl("/api/generate_ideas"),
+                apiUrl("/generate_ideas")
+            ];
+            let response, json, success = false, lastError = "";
+            for (let url of apiUrls) {
+                try {
+                    response = await safeFetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        mode: 'cors',
+                        body: JSON.stringify({ limitations, topic, num_ideas, word_limit })
+                    });
+                    if (response.ok) {
+                        json = await response.json();
+                        success = true;
+                        break;
+                    } else {
+                        lastError = `Status: ${response.status} ${response.statusText}`;
+                    }
+                } catch (err) {
+                    lastError = err.message || err.toString();
+                }
+            }
+            loadingDiv.style.display = 'none';
+            if (success && json && Array.isArray(json.ideas)) {
+                ideasArr = json.ideas;
+                ideasList.innerHTML = "";
+                ideaSelect.innerHTML = "";
+                ideasArr.forEach((idea, idx) => {
+                    const ideaId = `idea-details-${idx}`;
+                    // Clean up and highlight the idea title
+                    let cleanSummary = (idea.summary || "")
+                        .replace(/[*#`_~]/g, '')
+                        .replace(/\s+/g, ' ')
+                        .trim();
+                    // Extract first sentence or up to 60 chars for the title
+                    let title = cleanSummary.split(/[.?!]/)[0];
+                    if (title.length > 60) title = title.substring(0, 60) + "...";
+                    ideasList.innerHTML += `
+                        <div style="margin-bottom:1em;">
+                            <button type="button" class="idea-title-btn" data-target="${ideaId}" style="width:100%;text-align:left;font-weight:bold;padding:0.6em 1em;border:none;background:#e3f2fd;border-radius:5px;cursor:pointer;">
+                                <span style="font-size:1em;font-weight:bold;color:#1565c0;">Idea ${idx + 1}: ${title}</span>
+                            </button>
+                            <div id="${ideaId}" class="idea-details" style="display:none;margin-top:0.5em;background:#f9f9f9;padding:0.7em;border-radius:5px;">
+                                <span style="color:#1a237e;">${cleanSummary.replace(/\n/g, "<br>")}</span>
+                            </div>
+                        </div>
+                    `;
+                    let opt = document.createElement('option');
+                    opt.value = idx;
+                    opt.textContent = `Idea ${idx + 1}: ${title}`;
+                    ideaSelect.appendChild(opt);
+                });
+                ideasSection.style.display = 'block';
+
+                // Add event listeners for idea dropdown toggle
+                document.querySelectorAll('.idea-title-btn').forEach(btn => {
+                    btn.onclick = function() {
+                        const targetId = btn.getAttribute('data-target');
+                        const detailsDiv = document.getElementById(targetId);
+                        if (detailsDiv.style.display === "none" || detailsDiv.style.display === "") {
+                            detailsDiv.style.display = "block";
+                        } else {
+                            detailsDiv.style.display = "none";
+                        }
+                    };
+                });
+            } else {
+                errorDiv.textContent = (json && json.detail) || `An error occurred. Please try again. (Last error: ${lastError})`;
+            }
+        };
+
+        elaborateBtn.onclick = async function() {
+            const topic = document.getElementById('topic').value.trim();
+            const elab_word_limit = Number(document.getElementById('elab_word_limit').value);
+            const selectedIdx = ideaSelect.value;
+            if (!ideasArr[selectedIdx]) {
+                elaborationSection.style.display = 'block';
+                elaborationSection.innerHTML = "<span class='error'>Could not extract the selected idea for elaboration.</span>";
+                return;
+            }
+            const ideaText = ideasArr[selectedIdx].summary;
+            elaborationSection.style.display = 'block';
+            elaborationSection.innerHTML = "Generating detailed elaboration. Please wait...";
+
+            // Call backend for elaboration
+            let apiUrls = [
+                apiUrl("/api/elaborate"),
+                apiUrl("/elaborate")
+            ];
+            let response, json, success = false, lastError = "";
+            for (let url of apiUrls) {
+                try {
+                    response = await safeFetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        mode: 'cors',
+                        body: JSON.stringify({
+                            topic,
+                            idea_text: ideaText,
+                            word_limit: elab_word_limit
+                        })
+                    });
+                    if (response.ok) {
+                        json = await response.json();
+                        success = true;
+                        break;
+                    } else {
+                        lastError = `Status: ${response.status} ${response.statusText}`;
+                    }
+                } catch (err) {
+                    lastError = err.message || err.toString();
+                }
+            }
+            if (success && json && json.result) {
+                // Clean up unwanted symbols and highlight important parts
+                let cleanElaboration = json.result
+                    .replace(/[*#`_~]/g, '') // remove markdown symbols
+                    .replace(/\s+\n/g, '\n')
+                    .replace(/\n{3,}/g, '\n\n')
+                    .replace(/^\s+|\s+$/g, '');
+                // Highlight key sections with more visible color and heading style
+                cleanElaboration = cleanElaboration.replace(
+                    /(Significance:|Methodology:|Expected challenges:|Potential impact:)/gi,
+                    '<span style="display:inline-block;margin-top:0.7em;font-weight:bold;color:var(--elab-heading);font-size:1.08em;">$1</span>'
+                );
+                // Convert links and line breaks
+                let textWithLinks = cleanElaboration.replace(
+                    /(https?:\/\/[^\s]+)/g,
+                    '<a href="$1" target="_blank" rel="noopener">$1</a>'
+                );
+                textWithLinks = textWithLinks.replace(/\n/g, '<br>');
+
+                // --- Show image at the beginning if present ---
+                let imageHtml = "";
+                // Debug: log the image and error fields for troubleshooting
+                console.log("Elaboration image field:", json.image);
+                console.log("Elaboration image_error field:", json.image_error);
+
+                // Only show image if valid base64 data URI
+                if (json.image && typeof json.image === "string" && json.image.startsWith("data:image/") && json.image.length > 100) {
+                    imageHtml = `<div style="text-align:center;margin-bottom:1.2em;">
+                        <img src="${json.image}" alt="AI-generated illustration" style="max-width:100%;border-radius:10px;box-shadow:0 2px 8px #0002;">
+                    </div>`;
+                } else if (json.image_error) {
+                    imageHtml = `<div class="error" style="margin-bottom:1em;">[Image generation error: ${json.image_error}]</div>`;
+                } else if (json.image && json.image.length > 0) {
+                    imageHtml = `<div class="error" style="margin-bottom:1em;">[Image data is not valid base64 or not a supported format]</div>`;
+                }
+
+                elaborationSection.innerHTML = `
+                    <div class="elaboration">
+                        <span class="elaboration-title">Detailed Elaboration</span>
+                        ${imageHtml}
+                        <div class="elaboration-content">${textWithLinks}</div>
+                    </div>
+                `;
+            } else {
+                elaborationSection.innerHTML = `<span class='error'>${(json && json.detail) || `An error occurred. Please try again. (Last error: ${lastError})`}</span>`;
+            }
+        };
+
+        async function elaborateIdea(ideaText, topic, wordLimit = 500) {
+            const response = await fetch('/elaborate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idea_text: ideaText, topic: topic, word_limit: wordLimit })
+            });
+            const data = await response.json();
+            document.getElementById('elaboration-result').innerText = data.result || '';
+        }
+
+        // Dark/Light mode toggle
+        const toggleBtn = document.getElementById('toggle-mode-btn');
+        const toggleIcon = document.getElementById('toggle-mode-icon');
+        function setMode(dark) {
+            if (dark) {
+                document.body.classList.add('dark-mode');
+                // Sun icon SVG
+                toggleIcon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+                </svg>`;
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                // Moon icon SVG
+                toggleIcon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 1 0 9.79 9.79z"/>
+                </svg>`;
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        // Initial mode from localStorage or system
+        (function() {
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                setMode(true);
+            } else {
+                setMode(false);
+            }
+        })();
+        toggleBtn.onclick = function() {
+            setMode(!document.body.classList.contains('dark-mode'));
+        };
+
+        // Navigation logic for welcome/choose/AI ideas/analyzer
+        const welcomeSection = document.getElementById('welcome-section');
+        const chooseSection = document.getElementById('choose-section');
+        const aiIdeasSection = document.getElementById('ai-ideas-section');
+        const mainAnalyzerSection = document.getElementById('main-analyzer-section');
+        const getStartedBtn = document.getElementById('get-started-btn');
+        const exploreAiBtn = document.getElementById('explore-ai-btn');
+        const workOwnBtn = document.getElementById('work-own-btn');
+        const backToChooseBtn = document.getElementById('back-to-choose-btn');
+        const backToMainChooseBtn = document.getElementById('back-to-main-choose-btn');
+        const aiIdeasList = document.getElementById('ai-ideas-list');
+        // Add nav bar buttons
+        const navHotFreshBtn = document.getElementById('nav-hot-fresh-btn');
+        const navAdvancedBtn = document.getElementById('nav-advanced-btn');
+        const navHomeTitle = document.getElementById('nav-home-title');
+
+        // Show welcome on load, hide others
+        welcomeSection.style.display = 'flex';
+        chooseSection.style.display = 'none';
+        aiIdeasSection.style.display = 'none';
+        if (mainAnalyzerSection) mainAnalyzerSection.style.display = 'none';
+
+        getStartedBtn.onclick = function() {
+            welcomeSection.style.display = 'none';
+            chooseSection.style.display = 'flex';
+            aiIdeasSection.style.display = 'none';
+            if (mainAnalyzerSection) mainAnalyzerSection.style.display = 'none';
+        };
+        exploreAiBtn.onclick = async function() {
+            chooseSection.style.display = 'none';
+            aiIdeasSection.style.display = 'block';
+            if (mainAnalyzerSection) mainAnalyzerSection.style.display = 'none';
+            aiIdeasList.innerHTML = '<span class="loading-spinner"></span> <span class="loading-text">Generating ideas...</span>';
+            // Fetch random AI ideas from backend
+            let apiUrls = [
+                apiUrl("/api/random_ideas"),
+                apiUrl("/random_ideas")
+            ];
+            let response, json, success = false, lastError = "";
+            for (let url of apiUrls) {
+                try {
+                    response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ count: 10 })
+                    });
+                    if (response.ok) {
+                        json = await response.json();
+                        success = true;
+                        break;
+                    } else {
+                        lastError = `Status: ${response.status} ${response.statusText}`;
+                    }
+                } catch (err) {
+                    lastError = err.message || err.toString();
+                }
+            }
+            if (success && json && Array.isArray(json.ideas)) {
+                // --- Show ideas with images if available ---
+                const images = Array.isArray(json.images) ? json.images : [];
+                aiIdeasList.innerHTML = json.ideas.map((idea, idx) => {
+                    let imageHtml = "";
+                    if (images[idx] && images[idx].image && images[idx].image.startsWith("data:image/") && images[idx].image.length > 100) {
+                        imageHtml = `<div style="text-align:center;margin-bottom:0.7em;">
+                            <img src="${images[idx].image}" alt="AI-generated illustration" style="max-width:100%;border-radius:10px;box-shadow:0 2px 8px #0002;">
+                        </div>`;
+                    } else if (images[idx] && images[idx].image_error) {
+                        imageHtml = `<div class="error" style="margin-bottom:0.5em;">[Image generation error: ${images[idx].image_error}]</div>`;
+                    }
+                    // --- Box around idea and image ---
+                    return `<div class="ai-idea-card" style="margin-bottom:1.2em; border:2px solid #1565c0; border-radius:12px; background:#f8fafc; box-shadow:0 2px 8px #0001; padding:1.2em 1.5em;">
+                        ${imageHtml}
+                        <div style="padding:0.7em 1em; background:#e3eafc; border-radius:8px; margin-bottom:0.7em;">
+                            <button type="button" class="hot-idea-title-btn" data-idx="${idx}" style="width:100%;text-align:left;font-weight:bold;padding:0.6em 1em;border:none;background:transparent;cursor:pointer;">
+                                <span style="font-size:1em;font-weight:bold;color:#1565c0;">Idea ${idx + 1}: ${typeof idea === "string" ? idea : (idea.summary || "")}</span>
+                            </button>
+                        </div>
+                        <div id="hot-idea-elab-${idx}" class="hot-idea-elab" style="display:none;margin-top:0.5em;background:#f9f9f9;padding:0.7em;border-radius:5px;">
+                            <span class="loading-text" style="color:var(--primary);">Loading elaboration...</span>
+                        </div>
+                    </div>`;
+                }).join('');
+                // Add click listeners for elaboration
+                document.querySelectorAll('.hot-idea-title-btn').forEach(btn => {
+                    btn.onclick = async function() {
+                        const idx = btn.getAttribute('data-idx');
+                        const elabDiv = document.getElementById(`hot-idea-elab-${idx}`);
+                        if (elabDiv.style.display === "none" || elabDiv.style.display === "") {
+                            elabDiv.style.display = "block";
+                            // Only fetch if not already loaded
+                            if (!elabDiv.dataset.loaded) {
+                                // Call backend for elaboration
+                                let elabResp, elabJson, elabSuccess = false, elabErr = "";
+                                for (let url of [
+                                    apiUrl("/api/elaborate"),
+                                    apiUrl("/elaborate")
+                                ]) {
+                                    try {
+                                        elabResp = await fetch(url, {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                topic: "",
+                                                idea_text: json.ideas[idx],
+                                                word_limit: 200
+                                            })
+                                        });
+                                        if (elabResp.ok) {
+                                            elabJson = await elabResp.json();
+                                            elabSuccess = true;
+                                            break;
+                                        } else {
+                                            elabErr = `Status: ${elabResp.status} ${elabResp.statusText}`;
+                                        }
+                                    } catch (err) {
+                                        elabErr = err.message || err.toString();
+                                    }
+                                }
+                                if (elabSuccess && elabJson && elabJson.result) {
+                                    let cleanElab = elabJson.result
+                                        .replace(/[*#`_~]/g, '')
+                                        .replace(/\s+\n/g, '\n')
+                                        .replace(/\n{3,}/g, '\n\n')
+                                        .replace(/^\s+|\s+$/g, '');
+                                    cleanElab = cleanElab.replace(
+                                        /(Significance:|Methodology:|Expected challenges:|Potential impact:)/gi,
+                                        '<span style="display:inline-block;margin-top:0.7em;font-weight:bold;color:var(--elab-heading);font-size:1.08em;">$1</span>'
+                                    );
+                                    cleanElab = cleanElab.replace(/\n/g, '<br>');
+                                    elabDiv.innerHTML = `<div class="elaboration-content">${cleanElab}</div>`;
+                                    elabDiv.dataset.loaded = "1";
+                                } else {
+                                    elabDiv.innerHTML = `<span class='error'>${(elabJson && elabJson.detail) || `Could not generate elaboration.<br><small>${elabErr}</small>`}</span>`;
+                                }
+                            }
+                        } else {
+                            elabDiv.style.display = "none";
+                        }
+                    };
+                });
+            } else {
+                aiIdeasList.innerHTML = `<span class='error'>${(json && json.detail) || `Could not generate ideas.<br><small>${lastError}</small><br>Make sure your backend server is running and accessible at one of:<br><code>/api/random_ideas</code> or <code>http://127.0.0.1:8000/random_ideas</code>`}</span>`;
+            }
+        };
+        workOwnBtn.onclick = function() {
+            chooseSection.style.display = 'none';
+            aiIdeasSection.style.display = 'none';
+            if (mainAnalyzerSection) mainAnalyzerSection.style.display = 'block';
+        };
+        backToChooseBtn.onclick = function() {
+            aiIdeasSection.style.display = 'none';
+            chooseSection.style.display = 'flex';
+        };
+        if (backToMainChooseBtn) {
+            backToMainChooseBtn.onclick = function() {
+                mainAnalyzerSection.style.display = 'none';
+                chooseSection.style.display = 'flex';
+            };
+        }
+
+        // Navigation bar buttons: always take to their respective pages
+        if (navHotFreshBtn) {
+            navHotFreshBtn.onclick = function() {
+                welcomeSection.style.display = 'none';
+                chooseSection.style.display = 'none';
+                if (mainAnalyzerSection) mainAnalyzerSection.style.display = 'none';
+                aiIdeasSection.style.display = 'block';
+                exploreAiBtn.click();
+            };
+        }
+        if (navAdvancedBtn) {
+            navAdvancedBtn.onclick = function() {
+                welcomeSection.style.display = 'none';
+                chooseSection.style.display = 'none';
+                aiIdeasSection.style.display = 'none';
+                if (mainAnalyzerSection) mainAnalyzerSection.style.display = 'block';
+            };
+        }
+        if (navHomeTitle) {
+            navHomeTitle.onclick = function() {
+                welcomeSection.style.display = 'flex';
+                chooseSection.style.display = 'none';
+                aiIdeasSection.style.display = 'none';
+                if (mainAnalyzerSection) mainAnalyzerSection.style.display = 'none';
+            };
+        }
+        // Make sure nav buttons are selected after DOM is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            const navHotFreshBtn = document.getElementById('nav-hot-fresh-btn');
+            const navAdvancedBtn = document.getElementById('nav-advanced-btn');
+            const welcomeSection = document.getElementById('welcome-section');
+            const chooseSection = document.getElementById('choose-section');
+            const aiIdeasSection = document.getElementById('ai-ideas-section');
+            const mainAnalyzerSection = document.getElementById('main-analyzer-section');
+            const aiIdeasList = document.getElementById('ai-ideas-list');
+            const exploreAiBtn = document.getElementById('explore-ai-btn');
+
+            if (navHotFreshBtn) {
+                navHotFreshBtn.onclick = function() {
+                    // Hide all, show Hot & Fresh
+                    if (welcomeSection) welcomeSection.style.display = 'none';
+                    if (chooseSection) chooseSection.style.display = 'none';
+                    if (mainAnalyzerSection) mainAnalyzerSection.style.display = 'none';
+                    if (aiIdeasSection) aiIdeasSection.style.display = 'block';
+                    // If not loaded, trigger click on Hot & Fresh in choose section to load ideas
+                    if (aiIdeasList && !aiIdeasList.innerHTML.trim() && exploreAiBtn) {
+                        exploreAiBtn.click();
+                    }
+                };
+            }
+            if (navAdvancedBtn) {
+                navAdvancedBtn.onclick = function() {
+                    if (welcomeSection) welcomeSection.style.display = 'none';
+                    if (chooseSection) chooseSection.style.display = 'none';
+                    if (aiIdeasSection) aiIdeasSection.style.display = 'none';
+                    if (mainAnalyzerSection) mainAnalyzerSection.style.display = 'block';
+                };
+            }
+        });
+
+        // Hide/show navbar on scroll (like hidden task bar)
+        (function() {
+            let lastScrollTop = 0;
+            const navbar = document.querySelector('.navbar');
+            window.addEventListener('scroll', function() {
+                let st = window.pageYOffset || document.documentElement.scrollTop;
+                if (st > lastScrollTop && st > 30) {
+                    // downscroll
+                    navbar.style.top = "-70px";
+                } else {
+                    // upscroll
+                    navbar.style.top = "0";
+                }
+                lastScrollTop = st <= 0 ? 0 : st;
+            }, false);
+        })();
+    </script>
+    <script defer src="https://analytics.vercel.com/script.js" data-website-id="prj_8Gxk7hDXl4xb0SECYxkDuIFL5aSz"></script>
+</body>
+</html>
