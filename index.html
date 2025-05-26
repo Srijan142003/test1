@@ -31,7 +31,7 @@
             height: 64px;
             min-height: 64px;
             max-height: 64px;
-            padding: 0.2em 0;
+            padding: 0.2em 2vw; /* Add horizontal padding */
             box-shadow: 0 2px 8px #0001;
             display: flex;
             align-items: center;
@@ -48,7 +48,7 @@
             line-height: 64px;
             font-weight: bold;
             letter-spacing: 1px;
-            margin-left: 1em;
+            margin-left: 0.3em; /* Reduce left margin */
         }
         .toggle-mode-btn {
             margin-right: 1em;
@@ -227,7 +227,7 @@
         .dark-mode b{color:#000}
         @media (max-width: 600px) {
             .container { padding: 1em; }
-            .navbar-title { margin-left: 1em; }
+            .navbar-title { margin-left: 0.2em; } /* Reduce further on mobile */
             .toggle-mode-btn { margin-right: 1em; }
             .features-row {
                 flex-direction: column;
