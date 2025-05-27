@@ -40,7 +40,7 @@
             top: 0;
             left: 0;
             right: 0;
-            transition: top 0.3s;
+            transition: top 0.3s, opacity 0.3s;
             z-index: 10;
         }
         .navbar-title {
@@ -529,28 +529,24 @@
         }
         /* Enhanced loading spinner */
         .loading-spinner {
+            display: inline-block;
+            width: 38px;
+            height: 38px;
             border: 4px solid rgba(33, 150, 243, 0.2);
             border-radius: 50%;
             border-top: 4px solid var(--primary);
-            width: 38px;
-            height: 38px;
-            animation: spin 1s linear infinite;
+            border-right: 4px solid var(--accent);
+            border-bottom: 4px solid var(--primary);
+            border-left: 4px solid var(--accent);
+            animation: spin 0.8s linear infinite;
             position: relative;
+            background: transparent;
+            box-shadow: none;
         }
 
         .loading-spinner:after {
-            content: "";
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border: 4px solid transparent;
-            border-radius: 50%;
-            border-top: 4px solid var(--accent);
-            animation: spin 1.5s linear infinite;
+            content: none;
         }
-
         @keyframes spin {
             0% { transform: rotate(0deg);}
             100% { transform: rotate(360deg);}
@@ -698,6 +694,12 @@
             font-weight: bold;
             box-shadow: 0 2px 8px rgba(74, 107, 255, 0.3);
                 }
+        /* Hide navbar on scroll for all devices */
+body.hide-navbar .navbar {
+    top: -70px !important;
+    opacity: 0;
+    pointer-events: none;
+}
  </style>
 </head>
 <body>
@@ -1440,21 +1442,27 @@
             }
         });
 
-        // Hide/show navbar on scroll (like hidden task bar)
+        // Hide/show navbar on scroll (for all devices, using a class for better compatibility)
         (function() {
             let lastScrollTop = 0;
-            const navbar = document.querySelector('.navbar');
+            let ticking = false;
             window.addEventListener('scroll', function() {
-                let st = window.pageYOffset || document.documentElement.scrollTop;
-                if (st > lastScrollTop && st > 30) {
-                    // downscroll
-                    navbar.style.top = "-70px";
-                } else {
-                    // upscroll
-                    navbar.style.top = "0";
+                if (!ticking) {
+                    window.requestAnimationFrame(function() {
+                        let st = window.pageYOffset || document.documentElement.scrollTop;
+                        if (st > lastScrollTop && st > 30) {
+                            // downscroll
+                            document.body.classList.add('hide-navbar');
+                        } else {
+                            // upscroll
+                            document.body.classList.remove('hide-navbar');
+                        }
+                        lastScrollTop = st <= 0 ? 0 : st;
+                        ticking = false;
+                    });
+                    ticking = true;
                 }
-                lastScrollTop = st <= 0 ? 0 : st;
-            }, false);
+            }, { passive: true });
         })();
     </script>
     <script defer src="https://analytics.vercel.com/script.js" data-website-id="prj_9mdX4cGOYs8GpBjp15Jm5p2WlyXv"></script>
