@@ -1,5 +1,5 @@
 // Replace 'YOUR_UNSPLASH_ACCESS_KEY' with your actual Unsplash Access Key
-const unsplashAccessKey = M5aPfdQpfSCeI4lRvSLL51n_ej5dJZjdNO2oGCC0F20; 
+const unsplashAccessKey = "M5aPfdQpfSCeI4lRvSLL51n_ej5dJZjdNO2oGCC0F20"; 
 const keywords = 'technology, science, abstract'; // Keywords for image search
 const apiUrl = `https://api.unsplash.com/photos/random?query=${keywords}&client_id=${unsplashAccessKey}`;
 
