@@ -1,4 +1,4 @@
-const unsplashAccessKey = "M5aPfdQpfSCeI4lRvSLL51n_ej5dJZjdNO2oGCC0F20"; 
+const unsplashAccessKey = "lhNiF27qrx-UwVr4mdRuc6gbXciI08K1b9FjrN6gm2g"; 
 const keywords = 'technology, science, abstract'; // Keywords for image search
 apiUrl = `https://api.unsplash.com/photos/random?query=${keywords}&client_id=${unsplashAccessKey}`;
 
@@ -32,4 +32,4 @@ async function changeBackground() {
 changeBackground();
 
 // Change background image every 10 seconds (10000 milliseconds) after the initial image is set
-setInterval(changeBackground, 10000);
+setInterval(changeBackground, 72000);
