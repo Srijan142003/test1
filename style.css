@@ -6,7 +6,7 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4; /* Fallback background color */
+    background-color: transparent; /* Fallback background color */
     color: #333; /* Dark but not harsh text color */
 }
 
