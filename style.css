@@ -14,8 +14,22 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4; /* Light, modern background */
+    background-color: #f4f4f4; /* Fallback background color */
     color: #333; /* Dark but not harsh text color */
+}
+
+/* Add styles for the background container */
+.background-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 1s ease-in-out; /* Smooth fade transition */
+    z-index: -1; /* Ensure it stays behind content */
 }
 
 /* --- Typography --- */
