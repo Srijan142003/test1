@@ -1,6 +1,6 @@
 const unsplashAccessKey = "lhNiF27qrx-UwVr4mdRuc6gbXciI08K1b9FjrN6gm2g"; 
 const keywords = 'technology, science, abstract'; // Keywords for image search
-apiUrl = `https://api.unsplash.com/photos/random?query=${keywords}&client_id=${unsplashAccessKey}`;
+apiurl = `https://api.unsplash.com/photos/random?query=${keywords}&client_id=${unsplashAccessKey}`;
 
 // Get the background container element
 const backgroundContainer = document.querySelector('.background-container');
@@ -8,7 +8,7 @@ const backgroundContainer = document.querySelector('.background-container');
 // Function to fetch a random image from Unsplash
 async function fetchRandomImage() {
     try {
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiurl);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
