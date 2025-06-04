@@ -1,4 +1,4 @@
-const unsplashAccessKey = "lhNiF27qrx-UwVr4mdRuc6gbXciI08K1b9FjrN6gm2g"; 
+const unsplashAccessKey = "wdWCPuEeUWn8ozg8a76RKMPcln_mbmkhyWoRZ25EqnE"; 
 const keywords = 'technology, science, abstract'; // Keywords for image search
 apiurl = `https://api.unsplash.com/photos/random?query=${keywords}&client_id=${unsplashAccessKey}`;
 
